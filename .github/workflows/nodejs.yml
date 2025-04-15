@@ -1,13 +1,3 @@
-name: build nodejs
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * 1"
-  push:
-    branches:
-      - master
-    paths:
-      - nodejs/**
 jobs:
   push:
     name: "yolks:nodejs_${{ matrix.tag }}"
@@ -21,9 +11,6 @@ jobs:
           - 21
           - 22
           - 23
-    env:
-      OWNER: ${{ github.repository_owner }}
-      OWNER_LOWER: ${{ github.repository_owner.toLowerCase() }}
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
@@ -33,8 +20,13 @@ jobs:
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ env.OWNER }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.REGISTRY_TOKEN }}
+
+      - name: Set lowercase owner
+        id: lc_owner
+        run: echo "owner_lower=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
       - uses: docker/build-push-action@v6
         with:
           context: ./nodejs
@@ -42,5 +34,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ env.OWNER_LOWER }}/yolks:nodejs_${{ matrix.tag }}
-            ${{ env.OWNER_LOWER == 'pelican-eggs' && format('ghcr.io/parkervcp/yolks:nodejs_{0}', matrix.tag) || '' }}
+            ghcr.io/${{ steps.lc_owner.outputs.owner_lower }}/yolks:nodejs_${{ matrix.tag }}
+            ${{ steps.lc_owner.outputs.owner_lower == 'pelican-eggs' && format('ghcr.io/parkervcp/yolks:nodejs_{0}', matrix.tag) || '' }}
