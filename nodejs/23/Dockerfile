@@ -1,6 +1,6 @@
 FROM --platform=$TARGETOS/$TARGETARCH node:23-bookworm-slim
 
-LABEL author="Shirokami Ryzen" maintainer="ryzendesu.vip@gmail.com"
+LABEL author="Takamori Ren" maintainer="ren@takamori.xyz"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -12,7 +12,7 @@ STOPSIGNAL SIGINT
 RUN apt update && apt -y install \
     ffmpeg iproute2 git sqlite3 libsqlite3-dev python3 python3-dev \
     ca-certificates dnsutils tzdata zip tar curl build-essential libtool \
-    iputils-ping libnss3 tini imagemagick wget gnupg fonts-liberation \
+    iputils-ping chromium libnss3 tini imagemagick wget gnupg fonts-liberation \
     libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libgtk-3-0 \
     libnspr4 libx11-xcb1 libxcomposite1 libxcursor1 libxdamage1 libxi6 \
     libxrandr2 libxshmfence1 libxss1 libxtst6 lsb-release x11-utils libgbm-dev \
