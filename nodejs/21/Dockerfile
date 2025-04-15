@@ -1,13 +1,13 @@
 FROM        --platform=$TARGETOS/$TARGETARCH node:21-bookworm-slim
 
-LABEL       author="Michael Parker" maintainer="parker@pterodactyl.io"
+LABEL       author="Shirokami Ryzen" maintainer="ryzendesu.vip@gmail.com"
 
 # add container user and set stop signal
 RUN         useradd -m -d /home/container container
 STOPSIGNAL  SIGINT
 
-RUN         apt update \
-            && apt -y install \
+# Install dependencies (ffmpeg, puppeteer deps, imagemagick, etc.)
+RUN         apt update && apt -y install \
                 ffmpeg \
                 iproute2 \
                 git \
@@ -25,20 +25,49 @@ RUN         apt update \
                 libtool \
                 iputils-ping \
                 libnss3 \
-                tini
+                tini \
+                imagemagick \
+                wget \
+                gnupg \
+                fonts-liberation \
+                libappindicator3-1 \
+                libasound2 \
+                libatk-bridge2.0-0 \
+                libatk1.0-0 \
+                libgtk-3-0 \
+                libnspr4 \
+                libx11-xcb1 \
+                libxcomposite1 \
+                libxcursor1 \
+                libxdamage1 \
+                libxi6 \
+                libxrandr2 \
+                libxshmfence1 \
+                libxss1 \
+                libxtst6 \
+                lsb-release \
+                x11-utils \
+                libgbm-dev \
+                --no-install-recommends \
+            && apt-get clean \
+            && rm -rf /var/lib/apt/lists/*
 
-RUN         npm install --global npm@10.x.x typescript ts-node @types/node
+# Install Node.js global tools
+RUN         npm install --global npm@latest typescript ts-node @types/node
 
-# install pnpm
-RUN         npm install -g corepack@latest
-RUN         corepack enable
-RUN         corepack prepare pnpm@latest --activate
+# Install pnpm
+RUN         npm install -g corepack \
+            && corepack enable \
+            && corepack prepare pnpm@latest --activate
 
+# Switch to non-root user
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
 
+# Copy entrypoint script
 COPY        --chown=container:container ./../entrypoint.sh /entrypoint.sh
 RUN         chmod +x /entrypoint.sh
-ENTRYPOINT    ["/usr/bin/tini", "-g", "--"]
+
+ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
 CMD         ["/entrypoint.sh"]
