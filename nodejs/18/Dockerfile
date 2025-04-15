@@ -53,7 +53,7 @@ RUN         apt update && apt -y install \
             && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js global tools
-RUN         npm install --global npm@latest typescript ts-node @types/node
+RUN         npm install --global typescript ts-node @types/node
 
 # Install pnpm
 RUN         npm install -g corepack \
