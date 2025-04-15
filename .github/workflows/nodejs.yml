@@ -21,9 +21,11 @@ jobs:
           - 21
           - 22
           - 23
+    env:
+      OWNER: ${{ github.repository_owner }}
+      OWNER_LOWER: ${{ github.repository_owner.toLowerCase() }}
     steps:
       - uses: actions/checkout@v4
-      # Setup QEMU for ARM64 Build
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
         with:
@@ -31,7 +33,7 @@ jobs:
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ env.OWNER }}
           password: ${{ secrets.REGISTRY_TOKEN }}
       - uses: docker/build-push-action@v6
         with:
@@ -40,5 +42,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/yolks:nodejs_${{ matrix.tag }}
-            ${{ github.repository_owner == 'pelican-eggs' && format('ghcr.io/parkervcp/yolks:nodejs_{0}', matrix.tag) || '' }}
+            ghcr.io/${{ env.OWNER_LOWER }}/yolks:nodejs_${{ matrix.tag }}
+            ${{ env.OWNER_LOWER == 'pelican-eggs' && format('ghcr.io/parkervcp/yolks:nodejs_{0}', matrix.tag) || '' }}
