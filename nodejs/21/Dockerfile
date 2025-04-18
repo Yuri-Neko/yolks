@@ -1,6 +1,6 @@
 FROM        --platform=$TARGETOS/$TARGETARCH node:21-bookworm-slim
 
-LABEL       author="Shirokami Ryzen" maintainer="ryzendesu.vip@gmail.com"
+LABEL       author="Ren Takamori" maintainer="ren@takamori.xyz"
 
 # add container user and set stop signal
 RUN         useradd -m -d /home/container container
@@ -49,11 +49,13 @@ RUN         apt update && apt -y install \
                 x11-utils \
                 libgbm-dev \
                 --no-install-recommends \
+				chromium \
+				npm install pm2 -g && \
             && apt-get clean \
             && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js global tools
-RUN         npm install --global typescript ts-node @types/node
+RUN         npm install --global npm@latest typescript ts-node @types/node
 
 # Install pnpm
 RUN         npm install -g corepack \
