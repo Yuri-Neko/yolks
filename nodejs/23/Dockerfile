@@ -16,7 +16,7 @@ RUN apt update && apt -y install \
     libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libgtk-3-0 \
     libnspr4 libx11-xcb1 libxcomposite1 libxcursor1 libxdamage1 libxi6 \
     libxrandr2 libxshmfence1 libxss1 libxtst6 lsb-release x11-utils libgbm-dev \
-    nodejs npm --no-install-recommends && \
+    --no-install-recommends && \
     npm install pm2 -g && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
