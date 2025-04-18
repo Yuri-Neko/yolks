@@ -16,6 +16,7 @@ RUN         apt update && apt -y install \
                 python3 \
                 python3-dev \
                 ca-certificates \
+		        chromium \
                 dnsutils \
                 tzdata \
                 zip \
@@ -49,13 +50,12 @@ RUN         apt update && apt -y install \
                 x11-utils \
                 libgbm-dev \
                 --no-install-recommends \
-				chromium \
-				npm install pm2 -g && \
+			&& npm install pm2 -g \
             && apt-get clean \
             && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js global tools
-RUN         npm install --global npm@latest typescript ts-node @types/node
+RUN         npm install --global typescript ts-node @types/node
 
 # Install pnpm
 RUN         npm install -g corepack \
